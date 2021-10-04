@@ -14,16 +14,18 @@ from pandas import Series, DataFrame
 import matplotlib.pyplot as plt
 #import mplfinance
 #from mpl_finance import candlestick_ohlc
-global start 
-start = datetime.datetime(2019, 1, 1)
-global end 
-end = datetime.datetime.now()
-global df
-df = web.DataReader('AAPL', 'yahoo',start, end)
-#df['SMA_0.25'] = df.iloc[:,1].rolling(window=0.25).mean()
+
+
+
+
+# df['SMA_0.25'] = df.iloc[:,1].rolling(window=0.25).mean()
 pen = pg.mkPen(color=(0, 0, 0))
 
 class Ui_MainWindow(object):
+    start = ('2021-01-01')
+    end = datetime.datetime.now()
+    df = web.DataReader('AAPL', 'yahoo', start=start, end=end)
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1025, 770)
@@ -43,8 +45,8 @@ class Ui_MainWindow(object):
         self.graphicsView.setGeometry(QtCore.QRect(10, 20, 1000, 550))
         self.graphicsView.setObjectName("graphicsView")
         self.graphicsView.setBackground('w')
-        self.graphicsView.setLabel('left',"<span style=\"color:black;font-size:30px\">Dollars</span>")
-        self.graphicsView.setLabel('bottom',"<span style=\"color:black;font-size:30px\">Date</span>")
+        self.graphicsView.setLabel('left', "<span style=\"color:black;font-size:30px\">Dollars</span>")
+        self.graphicsView.setLabel('bottom', "<span style=\"color:black;font-size:30px\">Date</span>")
         
 
         self.split = QtWidgets.QSplitter(self.centralwidget)
@@ -155,13 +157,12 @@ class Ui_MainWindow(object):
 
     def search_button_clicked(self):
         self.graphicsView.clear()
-        global start, end, df
-        start = datetime.datetime(2020,5, 11)
-        end = datetime.datetime.now()
-        df = web.DataReader(self.qLineEdit.text(), 'yahoo', start, end)
+        self.start = datetime.datetime(2020,5, 11)
+        self.end = datetime.datetime.now()
+        self.df = web.DataReader(self.qLineEdit.text(), 'yahoo', self.start, self.end)
         stock = self.qLineEdit.text()
         stock = stock.upper() + " Stock"
-        self.graphicsView.plot(df['Adj Close'], label='AAPL', pen=pen)
+        self.graphicsView.plot(self.df['Adj Close'], label='AAPL', pen=pen)
         self.graphicsView.setTitle(stock)
 
     def one_day_clicked(self):
